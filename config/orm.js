@@ -9,21 +9,22 @@ const orm = {
     },
     insertOne: function (burger_name) {
         connection.query(`INSERT INTO burgers (burger_name, devoured) VALUES (?, false);`, [burger_name], (err, data) => {
-            if (err) throw err
+            if (err) throw err;
+            cb(data)
         })
     },
     updateOne: function (id) {
         var sql = `UPDATE burgers SET devoured= 1 WHERE id = ?`
-        connection.query(sql, [id], function (err, result) {
+        connection.query(sql, [id], function (err, data) {
             if (err) throw err;
+            cb(data)
         });
     },
     deleteOne: function (id) {
         var sql = "DELETE FROM burgers WHERE id = ?";
-        connection.query(sql, [id], function (err, result) {
-            if (err) {
-                throw err;
-            }
+        connection.query(sql, [id], function (err, data) {
+            if (err) throw err;
+                cb(data)
         });
     }
 }

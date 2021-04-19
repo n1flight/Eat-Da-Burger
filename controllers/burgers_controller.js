@@ -1,35 +1,37 @@
-var express = require('express')
-var router = express.Router();
-var burger = require('../models/burger.js')
+var express = require("express");
+const router = express.Router()
+const burger = require("../models/burger.js");
 
-router.get("/", function (req, res) {
-    burger.selectAll(function (data, cb) {
-        var object = {
-            burgers: data
-        };
-        object = object["burgers"]
-        console.log(object)
-        res.render('index', { object })
 
+router.get("/", function(req, res){
+    burger.selectAll(function(data) {
+        res.render("index", {burgers:data});
+    })
+});
+
+router.post("/", function(req, res) {
+    burger.insertOne("burger_name", req.body.burger_name, function(data) {
+        res.status(200).send
     })
 })
-router.post("/api/burgers", function (req, res) {
-    var burger_name = req.body.burger_name
-    burger.insertOne(burger_name),function (result) {
-    burger.insertOne([burger_name], [req.body.burger_name], function (result) {
+
+router.put("/:id", function(req, res) {
+    const id = req.params.id
+    burger.selectOne({id: id}, function(data) {
+        const selectedBurger = data[0]
+
+
+        if (selectedBurger === 0) {
+            selectedBurger.devoured = 1
+        } else {
+            selectedBurger.devoured = 0
+        }
+
+        burger.updateOne("devoured", selectedBurger.devoured, {id:id}, function(data) {
+            
+            res.status(200).end()
+        })
     })
-    }
-})
-router.put("/api/burgers/:id", function (req, res){
-    burger.updateOne([req.params.id], req.params.id), function (result) {
-    }
-})
-router.delete("/api/burgers/:id", function (req, res) {
-    var id = req.params.id
-    console.log(req.params.id)
-    burger.deleteOne(id), function (result) {
-        console.log(result)
-    }
 })
 
 module.exports = router;
