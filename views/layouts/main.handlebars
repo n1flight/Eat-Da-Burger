@@ -20,11 +20,13 @@
     {{{ body }}}
     <script>
         $("#submit").click(function (event) {
+            // Make sure to preventDefault on a submit event.
             event.preventDefault();
             console.log("Clicked")
             var newBurger = {
                 burger_name: $("#formTextArea").val().trim()
             }
+            //console.log(newBurger)
             $.ajax("/api/burgers", {
                 type: "POST",
                 data: newBurger
@@ -43,7 +45,7 @@
                 devoured: 1,
                 id: id
             }
-
+    
             $.ajax(`/api/burgers/${id}`, {
                 type: "PUT",
                 data: { newDevour }
